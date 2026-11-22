@@ -14,11 +14,12 @@ echo ">>> [2/3] Habilitando el servicio de Podman..."
 systemctl enable --now podman
 
 echo ">>> [3/3] Configurando el registro de contenedores..."
-if ! grep -q 'unqualified-search-registries' /etc/containers/registries.conf; then
+# Solo considerar líneas activas (que no empiecen por #, con posibles espacios delante)
+if ! grep -Eq '^[[:space:]]*unqualified-search-registries' /etc/containers/registries.conf; then
     echo 'unqualified-search-registries = ["docker.io"]' >> /etc/containers/registries.conf
     echo "    Configuración añadida a registries.conf"
 else
-    echo "    La configuración ya existe, omitiendo..."
+    echo "    La configuración ya existe (activa), omitiendo..."
 fi
 
 echo ""
